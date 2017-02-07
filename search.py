@@ -30,19 +30,36 @@ class TileGame:
     def search(self):
         self.q.put((0, self.initial_state))
         
-        #test
-        first = self.q.get()
-        print(next_states(first[1]))
-        #endtest
+        while not self.q.empty():
+            current_state = self.q.get()
+            # add current state to visited states
+            self.visited.append(current_state[1])
+            # check if the state is the solution
+            if test_solution(current_state[1]:
+                #TODO
+                pass 
 
-    def available(self):
-        pass
+        # add available states to queue
+
+
+    def available(self, state):
+        # passing sring to get possible states
+        possible_states = next_states(state)
+        # filter out already visited states
+        valid_states = [state for state in possible_states if state[1] not in self.visited]
+        return valid_states 
 
 def test_valid(state):
     # checks if the string contains a series of w, b or x
-    test = re.compile(r"^[wWbB]*[xX][wWbB]*$")
-    # return true if the string is valid
-    return test.match(state)
+    valid_test = re.compile(r"^[wWbB]*[xX][wWbB]*$")
+    # return truthy match if the string is valid
+    return valid_test.match(state)
+
+def test_solution(state):
+    # checks if the string is all black then one blank then all white
+    solution_test = re.compile(r"^[bB]*x[wW]*$")
+    # return truthy match if the string is a solution state
+    return solution_test.match(state)
 
 def swap_x(state, i):
     i_char = state[i]
