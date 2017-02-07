@@ -18,21 +18,21 @@ class TileGame:
     
 def test_valid(state):
     # checks if the string contains a series of w, b or x
-    test = re.compile(r"^([wWbBx]+)$")
+    test = re.compile(r"^[wWbB]*[xX][wWbB]*$")
     # return true if the string is valid
     return test.match(state)
 
 def swap_x(state, i):
     i_char = state[i]
     new_state = state.replace('x', i_char, 1)
-    new_state = new_state.split('')
+    new_state = list(new_state) # array of chars
     new_state[i] = 'x'
     new_state = ''.join(new_state)
     return new_state
 
 def next_states(state):
     # gets an array of possible states possible one move from the start state, including the cost
-    state_array = state.split('')
+    state_array = list(state)
     
     next_states = []
 
