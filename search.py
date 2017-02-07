@@ -21,10 +21,10 @@ class TileGame:
         self.visited = []
 
         if args.search_type is "BFS":
-            self.q= Queue()
+            self.q = Queue()
         elif args.search_type is "DFS":
-            self.q= LifoQueue()
-        else:
+            self.q = LifoQueue()
+        else: # UCS, GS, A-star
             self.q = PriorityQueue()
     
     def search(self):
@@ -35,7 +35,7 @@ class TileGame:
             # add current state to visited states
             self.visited.append(current_state[1])
             # check if the state is the solution
-            if test_solution(current_state[1]:
+            if test_solution(current_state[1]):
                 #TODO
                 pass 
 
@@ -57,9 +57,28 @@ def test_valid(state):
 
 def test_solution(state):
     # checks if the string is all black then one blank then all white
-    solution_test = re.compile(r"^[bB]*x[wW]*$")
+    solution_test = re.compile(r"^[bB]*[xX][wW]*$")
     # return truthy match if the string is a solution state
     return solution_test.match(state)
+
+def heuristic(state):
+    x_index = state.index('x')
+    chars  = list(state.upper())
+
+    print(state)
+
+    cost = 0
+    print(range(0,x_index-1))
+    for i in range(0, x_index):
+        if chars[i] is "W":
+            cost += 1
+
+    print(range(x_index+1,len(chars)-1))
+    for j in range(x_index+1, len(chars)):
+        if chars[j] is "B":
+            cost += 1
+
+    return cost
 
 def swap_x(state, i):
     i_char = state[i]
@@ -96,5 +115,7 @@ def next_states(state):
 
 #TESTING#
 
-test = TileGame("WBxW")
-test.search()
+print(heuristic("wwwxbbb"))
+print(heuristic("wwxbb"))
+print(heuristic("wxb"))
+print(heuristic("bBBwBbxwWbwwW"))
