@@ -30,7 +30,7 @@ def swap_x(state, i):
     new_state = ''.join(new_state)
     return new_state
 
-def next(state):
+def next_states(state):
     # gets an array of possible states possible one move from the start state, including the cost
     state_array = state.split('')
     
