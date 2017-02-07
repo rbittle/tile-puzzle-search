@@ -20,9 +20,9 @@ class TileGame:
         self.initial_state = initial_state
         self.visited = []
 
-        if args.search_type is "BFS":
+        if args.search_type == "BFS":
             self.q = Queue()
-        elif args.search_type is "DFS":
+        elif args.search_type == "DFS":
             self.q = LifoQueue()
         else: # UCS, GS, A-star
             self.q = PriorityQueue()
@@ -65,15 +65,11 @@ def heuristic(state):
     x_index = state.index('x')
     chars  = list(state.upper())
 
-    print(state)
-
     cost = 0
-    print(range(0,x_index-1))
     for i in range(0, x_index):
         if chars[i] is "W":
             cost += 1
 
-    print(range(x_index+1,len(chars)-1))
     for j in range(x_index+1, len(chars)):
         if chars[j] is "B":
             cost += 1
@@ -84,6 +80,7 @@ def swap_x(state, i):
     i_char = state[i]
     x_pos = state.index('x')
 
+    cost = 0
     if args.cost:
         cost = abs(i - x_pos)
     else:
@@ -93,6 +90,11 @@ def swap_x(state, i):
     new_state = list(new_state) # array of chars
     new_state[i] = 'x'
     new_state = ''.join(new_state)
+
+    if args.search_type == "GS":
+        cost = heuristic(new_state)
+    elif args.search_type == 'A-star':
+        cost += heuristic(new_state)
 
     return (cost, new_state)
 
@@ -112,10 +114,5 @@ def next_states(state):
     return next_states       
 
 
-
-#TESTING#
-
-print(heuristic("wwwxbbb"))
-print(heuristic("wwxbb"))
-print(heuristic("wxb"))
-print(heuristic("bBBwBbxwWbwwW"))
+if __name__ == "__main__":
+    pass
