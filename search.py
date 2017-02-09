@@ -110,9 +110,8 @@ def swap_x(state_tup, i):
     i_char = state[i]
     x_pos = state.index('x')
 
-    cost = 0
     if args.cost:
-        cost = abs(i - x_pos)
+        cost = len(state) - abs(i - x_pos)
     else:
         cost = 1
 
