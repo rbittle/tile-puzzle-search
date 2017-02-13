@@ -7,9 +7,9 @@ from queue import Queue, PriorityQueue, LifoQueue
 # command line argument parsing
 parser = argparse.ArgumentParser()
 
-parser.add_argument("-cost", action="store_true")
-parser.add_argument("search_type")
-parser.add_argument("input_file")
+parser.add_argument("-cost", action="store_true", help="Uses the furthest-move-optimal cost weights.")
+parser.add_argument("search_type", help="Can be: BFS, DFS, UCS, GS, A-star")
+parser.add_argument("input_file", help="File containing the initial game state. This will be validated before being ran. The program assumes there will be at least one white square and one black square.")
 
 args = parser.parse_args()
 
@@ -78,8 +78,8 @@ class TileGame:
 
 
 def test_valid(state):
-    # checks if the string contains a series of w, b or x
-    valid_test = re.compile(r"^[wWbB]+[xX][wWbB]+$")
+    # checks if the string contains a series of w, b, and one x
+    valid_test = re.compile(r"^[wWbB]*[xX][wWbB]*$")
     # return truthy match if the string is valid
     return valid_test.match(state)
 
