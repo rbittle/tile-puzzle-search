@@ -50,9 +50,11 @@ class TileGame:
     # Once the solution is found, this function traces the parents to create
     # a formatted output text.
     def deconstruct_solution(self, solution_state):
+
+        ''' test printing
         for v in self.opened.values():
             print(v, test_solution(v[1]) != None)
-
+        '''
 
         current = solution_state
         # initialize step counter and path printer
@@ -73,7 +75,10 @@ class TileGame:
             if node[3] == "start":
                 print("Step "+str(step)+":  "+node[1])
             else:
-                print("Step "+str(step)+":  move "+str(node[3])+" "+node[1])
+                if args.cost:
+                    print("Step "+str(step)+":  move "+str(node[3])+" "+node[1]+" (c="+str(print_cost(node))+")")
+                else:
+                    print("Step "+str(step)+":  move "+str(node[3])+" "+node[1])
             step += 1
         
     def search(self):
@@ -97,8 +102,12 @@ class TileGame:
 
             # if the state is not a solution, get the available states and add them to the queue.
             for next_state in self.available(current_state):
-                self.opened[next_state[1]] = current_state
                 self.q.put(next_state)
+                # To get the final path, construct a parent lookup table
+                # assume first accessed instance of node is least cost
+                # should work for all complete search algorithms (i.e. not DFS)
+                if next_state[1] not in self.opened:
+                    self.opened[next_state[1]] = current_state
 
 
 def test_valid(state):
@@ -133,6 +142,15 @@ def heuristic(state):
 
     return cost
 
+def print_cost(state_tup):
+    ''' This function returns the cost of making a move
+    for printing during the path reconstruction. 
+    The actual costs used during the search are modified in order
+    to use the same logic, but keeps it lower-is-better to re-use code'''
+    moved = state_tup[3] # index of moved character
+    x_pos = state_tup[2].lower().index('x') # position of the empty square in parent state
+    return abs(moved - x_pos)
+
 def swap_x(state_tup, i):
     ''' This function swaps the tile at index i, and returns a state tuple that includes
     the cost, state as a string, parent state as a string, and index that was swapped
@@ -141,7 +159,7 @@ def swap_x(state_tup, i):
     state = state_tup[1] # string of state
 
     i_char = state[i] # character that is being swapped
-    x_pos = state.index('x') # position of the 'x' tile
+    x_pos = state.lower().index('x') # position of the 'x' tile
 
     # initialize new cost value depending if the cost flag was used
     if args.cost:
